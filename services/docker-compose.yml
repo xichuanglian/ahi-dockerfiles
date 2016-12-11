@@ -1,0 +1,28 @@
+version: '2'
+services:
+    db-mysql:
+        build: percona
+        volumes:
+            - mysql-data:/var/lib/mysql
+    wiki:
+        build: wiki
+        volumes:
+            - mediawiki:/var/www/html
+        depends_on:
+            - db-mysql
+    web:
+        build: nginx
+        ports:
+            - "80:80"
+            - "8002:8002"
+        depends_on:
+            - wiki
+
+volumes:
+    mysql-data:
+        external: true
+    mediawiki:
+        external:
+            name: mediawiki-1.28.0
+
+
